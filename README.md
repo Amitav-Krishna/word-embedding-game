@@ -1,5 +1,6 @@
 # MVP
 - [X] Blank web interface
+- [ ] Pre-computed dataset
 - [ ] Ability to initialize target and context embeddings with random numbers
 - [ ] Manual training step
 - [ ] Negative sampling

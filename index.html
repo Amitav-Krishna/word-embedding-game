@@ -8,14 +8,41 @@
   <link rel="icon" href="favicon.png">
 </head>
 <body>
+	<h1>Embeddings Demo</h1>
+	<button id="rerunButton">Rerun Embeddings</button>
 	<script>
 		let embeddings = {};
-		fetch('embeddings.json')
-			.then(response => response.json())
-			.then(data => {
-				embeddings = data;
-				console.log("Loaded embeddings:", embeddings);
-			});
+
+		function loadEmbeddings() {
+			fetch('embeddings.json')
+				.then(response => response.json())
+				.then(data => {
+					embeddings = data;
+					console.log("Loaded embeddings:", embeddings);
+					document.getElementById('output').textContent = JSON.stringify(embeddings, null, 2);
+				})
+				.catch(error => {
+					console.error("Error loading embeddings:", embeddings);
+					document.getElementById('output').textConent = "Error loading embeddings: " + error;
+
+				});
+			document.getElementById('rerunButton').addEventListener('click', () => {
+				fetch('/rerun-embeddings', {
+					method: 'POST'
+				})
+				.then(response => respone.json())
+				.then(data =>{
+					if (data.status === "success") {
+						console.log("Embeddings regenerated:", data.message);
+						loadEmbeddings();
+					} else {
+						console.error("Error:", data.message);
+						document.getElementById('output').textContent = "Error: " +error;
+					}
+				});
+			})
+			loadEmbeddings();
+		}
 	</script>
 </body>
 </html>

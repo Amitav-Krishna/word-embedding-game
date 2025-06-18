@@ -1,5 +1,5 @@
 # MVP
-- [ ] Blank web interface
+- [X] Blank web interface
 - [ ] Ability to initialize target and context embeddings with random numbers
 - [ ] Manual training step
 - [ ] Negative sampling

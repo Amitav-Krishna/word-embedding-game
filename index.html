@@ -8,6 +8,14 @@
   <link rel="icon" href="favicon.png">
 </head>
 <body>
-  <h1>Hello, world!</h1>
+	<script>
+		let embeddings = {};
+		fetch('embeddings.json')
+			.then(response => response.json())
+			.then(data => {
+				embeddings = data;
+				console.log("Loaded embeddings:", embeddings);
+			});
+	</script>
 </body>
 </html>

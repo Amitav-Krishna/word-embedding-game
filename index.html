@@ -1,48 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Hello, world!</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="" />
-  <link rel="icon" href="favicon.png">
-</head>
-<body>
-	<h1>Embeddings Demo</h1>
-	<button id="rerunButton">Rerun Embeddings</button>
-	<script>
-		let embeddings = {};
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello, world!</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="description" content="" />
+        <link rel="icon" href="favicon.png" />
+    </head>
+    <body>
+        <h1>Embeddings Demo</h1>
+        <button id="rerunButton">Rerun Embeddings</button>
+        <pre id="output">Loading embeddings...</pre>
+        <script>
+            let embeddings = {};
 
-		function loadEmbeddings() {
-			fetch('embeddings.json')
-				.then(response => response.json())
-				.then(data => {
-					embeddings = data;
-					console.log("Loaded embeddings:", embeddings);
-					document.getElementById('output').textContent = JSON.stringify(embeddings, null, 2);
-				})
-				.catch(error => {
-					console.error("Error loading embeddings:", embeddings);
-					document.getElementById('output').textConent = "Error loading embeddings: " + error;
+            function loadEmbeddings() {
+                fetch("http://localhost:5000/embeddings.json")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        embeddings = data;
+                        console.log("Loaded embeddings:", embeddings);
+                        document.getElementById("output").textContent =
+                            JSON.stringify(embeddings, null, 2);
+                    })
+                    .catch((error) => {
+                        console.error("Error loading embeddings:", error);
+                        document.getElementById("output").textContent =
+                            "Error loading embeddings: " + error;
+                    });
+            }
 
-				});
-			document.getElementById('rerunButton').addEventListener('click', () => {
-				fetch('/rerun-embeddings', {
-					method: 'POST'
-				})
-				.then(response => respone.json())
-				.then(data =>{
-					if (data.status === "success") {
-						console.log("Embeddings regenerated:", data.message);
-						loadEmbeddings();
-					} else {
-						console.error("Error:", data.message);
-						document.getElementById('output').textContent = "Error: " +error;
-					}
-				});
-			})
-			loadEmbeddings();
-		}
-	</script>
-</body>
+            document
+                .getElementById("rerunButton")
+                .addEventListener("click", () => {
+                    fetch("http://localhost:5000/rerun-embeddings", {
+                        method: "POST",
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.status === "success") {
+                                console.log(
+                                    "Embeddings regenerated:",
+                                    data.message,
+                                );
+                                loadEmbeddings();
+                            } else {
+                                console.error("Error:", data.message);
+                                document.getElementById("output").textContent =
+                                    "Error: " + data.message;
+                            }
+                        })
+                        .catch((error) => {
+                            document.getElementById("output").textContent =
+                                "Fetch error: " + error;
+                        });
+                });
+
+            // Load embeddings when page loads
+            loadEmbeddings();
+        </script>
+    </body>
 </html>

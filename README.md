@@ -8,3 +8,6 @@
 - [ ] Epoch summary
 
 # Technologies
+- HTML
+- Flask
+- JavaScript

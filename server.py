@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, send_from_directory
+from flask_cors import CORS
 import subprocess
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def serve_index():
@@ -17,7 +19,7 @@ def rerun_embeddings():
     try:
         # Run the embeddings.py script
         result = subprocess.run(['python', 'embeddings.py'], capture_output=True, text=True)
-        
+
         if result.returncode == 0:
             return jsonify({"status": "success", "message": result.stdout})
         else:

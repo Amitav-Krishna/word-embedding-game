@@ -7,21 +7,61 @@
         <meta name="description" content="" />
         <link rel="icon" href="favicon.png" />
     </head>
-    <body>
+    <by>
         <h1>Embeddings Demo</h1>
         <button id="rerunButton">Rerun Embeddings</button>
         <pre id="output">Loading embeddings...</pre>
         <script>
             let embeddings = {};
 
+            const dropdown = document.createElement("select");
+
+            document.body.appendChild(dropdown);
             function loadEmbeddings() {
                 fetch("http://localhost:5000/embeddings.json")
                     .then((response) => response.json())
                     .then((data) => {
                         embeddings = data;
                         console.log("Loaded embeddings:", embeddings);
-                        document.getElementById("output").textContent =
-                            JSON.stringify(embeddings, null, 2);
+                        const words = Object.keys(embeddings);
+                        dropdown.innerHTML = "";
+
+                        const dropdownOptions = words.map((word) => {
+                            return {
+                                summary: word,
+                                details: {
+                                    v: embeddings[word].v,
+                                    u: embeddings[word].u,
+                                },
+                            };
+                        });
+
+                        dropdownOptions.forEach((option) => {
+                            const optionElement =
+                                document.createElement("option");
+                            optionElement.textContent = option.summary;
+                            optionElement.value = JSON.stringify(
+                                option.details,
+                            );
+
+                            dropdown.appendChild(optionElement);
+                        });
+                        dropdown.addEventListener("change", (event) => {
+                            const selectedOption =
+                                event.target.options[
+                                    event.target.selectedIndex
+                                ];
+                            const word = selectedOption.textContent;
+                            const embeddingsData = JSON.parse(
+                                selectedOption.value,
+                            );
+
+                            document.getElementById("output").textContent =
+                                `Word: ${word}\n` +
+                                `Embeddings: \n` +
+                                `v: ${embeddingsData.v.join(", ")}\n` +
+                                `u: ${embeddingsData.u.join(", ")}`;
+                        });
                     })
                     .catch((error) => {
                         console.error("Error loading embeddings:", error);
@@ -56,7 +96,7 @@
                         });
                 });
 
-            // Load embeddings when page loads
+            // Load embeddings when page loads. See line 17.
             loadEmbeddings();
         </script>
     </body>
